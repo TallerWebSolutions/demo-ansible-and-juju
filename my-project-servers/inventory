@@ -1,0 +1,2 @@
+[webserver]
+10.0.3.191  ansible_ssh_user=ubuntu

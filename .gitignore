@@ -1,0 +1,15 @@
+.project
+.settings
+.buildpath
+*~
+*.orig
+.svn
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.sublime-projectcompletions
+nbproject
+*.swo
+*.swp
+
+.vagrant

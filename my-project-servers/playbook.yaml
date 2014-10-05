@@ -1,0 +1,90 @@
+---
+- hosts: webserver
+
+  # Every command is going to be executed with sudo.
+  sudo: yes
+
+  # Override global variables.
+  vars:
+    www_owner: ubuntu
+    www_group: www-data
+
+  # Execute tasks before anything else.
+  pre_tasks:
+    - name: "Adding www's owner user in the web server group."
+      user: >
+        name={{ www_owner }} groups={{ www_group }}
+
+    - name: "Set permissions for the /var/www directory."
+      file: >
+        path=/var/www mode=6775
+        owner={{ www_owner }} group={{ www_group }}
+        state=directory
+
+    - name: "Create the Virtual host's dir and set permissions."
+      file: >
+        path=/var/www/my-project mode=6775
+        owner={{ www_owner }} group={{ www_group }}
+        state=directory
+
+  # Execute the Ansible roles.
+  roles:
+    # Install Git.
+    - role: geerlingguy.git
+      git_package:
+        - git
+
+    # Install and configure Apache2.
+    - role: geerlingguy.apache
+      # Create Virtual Hosts.
+      apache_vhosts:
+        # Additional properties: 'serveradmin, extra_parameters'.
+        - servername: "my-project.local"
+          documentroot: "/var/www/my-project"
+
+    # Install and configure PHP with FPM.
+    - role: geerlingguy.php
+      php_memory_limit: "512M"
+      php_max_execution_time: "60"
+      php_upload_max_filesize: "64M"
+      php_apc_enabled_in_ini: true
+      php_apc_cache_by_default: "1"
+      php_apc_shm_size: "96M"
+      php_date_timezone: "America/Sao_Paulo"
+      php_enable_webserver: true
+      # Enable PHP-FPM.
+      php_enable_php_fpm: true
+      # Enable APC.
+      php_enable_apc: true
+      # Install the packages.
+      php_packages:
+        - php5
+        - php5-mcrypt
+        - php5-cli
+        - php5-common
+        - php5-curl
+        - php5-dev
+        - php5-fpm
+        - php5-gd
+        - php-pear
+        - php5-mysql
+
+    # Install Composer.
+    - geerlingguy.composer
+
+    # Install Drush (Drupal's shell).
+    - role: geerlingguy.drush
+      drush_version: 6.x
+
+  # Execute tasks after the roles of pre tasks.
+  tasks:
+    - name: "Create's the index.php"
+      shell: >
+        echo "<?php phpinfo(); ?>" > index.php
+      args:
+        chdir: /var/www/my-project
+        creates: /var/www/my-project/index.php
+      sudo_user: "{{ www_owner }}"
+      notify:
+        - restart apache
+        - restart php-fpm
