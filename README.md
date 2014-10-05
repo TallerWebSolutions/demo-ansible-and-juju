@@ -208,8 +208,7 @@ The web server software is running but no content has been added, yet.
 That means your default server is already up and running!! but what about the virtual host you created?
 
 First, let's try to simulate the install of our application adding tasks at the end of the `playbook.yaml` file, pay attention at the indentation spaces.
-```
-...
+```yaml
   # Execute tasks after the roles of pre tasks.
   tasks:
     - name: "Create's the index.php"
