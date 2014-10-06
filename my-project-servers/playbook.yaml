@@ -33,6 +33,7 @@
     - role: geerlingguy.git
       git_package:
         - git
+        - git-flow
 
     # Install and configure Apache2.
     - role: geerlingguy.apache
@@ -41,6 +42,8 @@
         # Additional properties: 'serveradmin, extra_parameters'.
         - servername: "my-project.local"
           documentroot: "/var/www/my-project"
+          extra_parameters: |
+            ServerAlias sub1.my-project.local sub2.my-project.local
 
     # Install and configure PHP with FPM.
     - role: geerlingguy.php

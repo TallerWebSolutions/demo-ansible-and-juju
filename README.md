@@ -6,7 +6,7 @@ This tutorial is only for learning purposes, for you to know the power of the tw
 ### Pre-requisities:
 1. **Understand what a [Linux container](https://www.youtube.com/watch?v=_jBTHyo0mEQ) is**.
 2. **GNU/Linux Ubuntu Trusty**.
-If not, you can use the [Juju Vagrant flow](https://juju.ubuntu.com/docs/config-vagrant.html) and skip the next step #3.
+If not, you can use the [Juju Vagrant flow](https://juju.ubuntu.com/docs/config-vagrant.html) and skip the next requirement #3.
 3. **Juju local juju-local and bootstraped**.
 If not, here's [how to install](https://juju.ubuntu.com/docs/config-LXC.html).
 4. **Ansible**.
@@ -209,7 +209,7 @@ That means your default server is already up and running!! but what about the vi
 
 First, let's try to simulate the install of our application adding tasks at the end of the `playbook.yaml` file, pay attention at the indentation spaces.
 ```yaml
-  # Execute tasks after the roles of pre tasks.
+  # Execute tasks after the roles and pre tasks.
   tasks:
     - name: "Create's the index.php"
       shell: >
